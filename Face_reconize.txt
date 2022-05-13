@@ -1,0 +1,29 @@
+# Load Data 
+with open('data.pickle', 'rb') as f:
+    (x_train, y_train) = pickle.load(f)
+x_test = x_train[180]
+x_train = x_train[:199]
+y_train = y_train[:199]
+x_train = x_train.reshape(x_train.shape[0],-1)
+x_train = x_train.astype('float32')
+x_train/=255
+y_train = np_utils.to_categorical(y_train,2)
+model = Sequential()
+model.add(Dense(512,activation = 'relu', input_shape = (67500,)))
+model.add(Dense(512, activation ='relu'))
+model.add(Dense(512, activation ='relu'))
+model.add(Dense(512, activation ='relu'))
+model.add(Dense(512, activation ='relu'))
+model.add(Dense(512, activation ='relu'))
+model.add(Dense(512, activation ='relu'))
+model.add(Dense(2,activation = 'softmax'))
+
+model.compile(loss='mse',optimizer = RMSprop(), metrics ='acc')
+his = model.fit(x_train,y_train, batch_size = 128, epochs = 100, validation_split=0.2, callbacks = [EarlyStopping(monitor='val_loss', patience = 20)])
+
+# Load Test Image
+plt.imshow(cv2.cvtColor(x_test, cv2.COLOR_BGR2RGB))
+x_test = x_test.reshape(1,-1)
+x_test = x_test.astype('float32')
+x_test /= 255
+print(np.argmax(model.predict(x_test),axis=1))

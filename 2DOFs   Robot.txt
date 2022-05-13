@@ -1,0 +1,33 @@
+l1 = 40
+l2 = 50
+x_train = []
+y_train = []
+for t1 in [0,2*np.pi,0.01]:
+  for t2 in [0,2*np.pi,0.01]:
+    x = l1*math.cos(t1) + l2*math.cos(t1+t2)
+    y = l1*math.sin(t1) + l2*math.sin(t1+t2)
+    x_train.append(np.array([x,y]))
+    y_train.append(np.array([t1,t2]))
+x_train = np.array(x_train)
+y_train = np.array(y_train)
+x_train[1].shape
+
+model1 = Sequential()
+model1.add(Dense(512, activation = 'relu', input_shape = (2,)))
+model1.add(Dense(512, activation = 'relu'))
+model1.add(Dense(512, activation = 'relu'))
+model1.add(Dense(512, activation = 'relu'))
+model1.add(Dense(512, activation = 'relu'))
+model1.add(Dense(512, activation = 'relu'))
+model1.add(Dense(2,activation = 'softmax'))
+model1.compile(loss='mae',optimizer = RMSprop(), metrics = 'acc')
+his1 = model1.fit(x_train, y_train, batch_size = 128, epochs = 50, validation_split = 0.2, callbacks = [EarlyStopping(monitor='val_loss',patience = 10)])
+# Plot his
+plot_history(his1)
+#Predict
+test = np.array([[10,-10]])
+t1 = model1.predict(test)[0][0]
+t2 = model1.predict(test)[0][1]
+x = l1*math.cos(t1) + l2*math.cos(t1+t2)
+y = l1*math.sin(t1) + l2*math.sin(t1+t2)
+print("t1=",t1,"t2=",t2)

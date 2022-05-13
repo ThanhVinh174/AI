@@ -1,0 +1,33 @@
+from keras.models import Sequential
+from keras.layers import Dense, Activation, Conv2D, MaxPooling2D
+from keras.callbacks import EarlyStopping
+from tensorflow.keras.optimizers import RMSprop
+from keras.utils import np_utils
+import numpy as np
+import math
+import matplotlib.pyplot as plt
+import pickle
+import cv2
+import glob
+from keras.preprocessing.image import load_img, img_to_array
+def plot_history(his):
+  f1 = his.history['acc']
+  val_f1 = his.history['val_acc']
+
+  loss = his.history['loss']
+  val_loss = his.history['val_loss']
+
+  plt.figure(figsize=(8, 8))
+  plt.subplot(2, 1, 1)
+  plt.plot(f1, label='Acc')
+  plt.plot(val_f1, label='Validation Acc')
+  plt.legend(loc='lower right')
+  plt.title('Accuracy')
+
+  plt.subplot(2, 1, 2)
+  plt.plot(loss, label='Loss')
+  plt.plot(val_loss, label='Validation Loss')
+  plt.legend(loc='upper right')
+  plt.title('Loss')
+  plt.xlabel('epoch')
+  plt.show()
